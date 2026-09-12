@@ -41,65 +41,65 @@ Consolidar conhecimentos de Active Directory aplicados à rotina de suporte téc
 - Validação do princípio do menor privilégio
 - Documentação de procedimentos e resultados dos testes
 
-# 📸 Demonstração
+## 📸 Demonstração
 
-## 1. Configuração do domínio
+### 1. Configuração do domínio
 
 Domínio `lab.test` configurado no Active Directory Domain Services para utilização no laboratório.
 
 ![Configuração do domínio](evidencias/01_Dominio_LabTest.png)
 
-## 2. Organização por unidades organizacionais
+### 2. Organização por unidades organizacionais
 
 Estrutura de OUs criada para organizar usuários dos setores Financeiro e RH.
 
 ![Estrutura de OUs](evidencias/02_Estrutura_OUs.png)
 
-## 3. Validação da estação no domínio
+### 3. Validação da estação no domínio
 
 Validação da conta autenticada, do controlador de domínio `SRV-DC01` e da estação `CLIENTE01` utilizando os comandos `whoami`, `%logonserver%` e `hostname`.
 
 ![Validação da estação no domínio](evidencias/03_Cliente_Dominio_Validado.png)
 
-## 4. Permissões da pasta Financeiro
+### 4. Permissões da pasta Financeiro
 
 O grupo `GG_Financeiro` foi configurado com permissão **Modify** sobre a pasta compartilhada do setor, permitindo leitura, criação e alteração de arquivos pelos membros autorizados.
 
 ![Permissões NTFS do Financeiro](evidencias/04_Permissoes_NTFS_Financeiro.png)
 
-## 5. Validação do grupo de segurança
+### 5. Validação do grupo de segurança
 
 O comando `whoami /groups` foi utilizado para confirmar que a sessão da usuária Cecília recebeu o grupo `GG_Financeiro` em seu token de segurança.
 
 ![Grupo Financeiro da Cecília](evidencias/05_Grupo_Financeiro_Cecilia.png)
 
-## 6. Validação de leitura e gravação
+### 6. Validação de leitura e gravação
 
 A usuária Cecília criou o arquivo `Teste_Cecilia` em `\\SRV-DC01\Financeiro`, confirmando a aplicação das permissões de acesso e gravação.
 
 ![Gravação da Cecília no Financeiro](evidencias/06_Gravacao_Cecilia_Financeiro.png)
 
-## 7. Revogação de acesso
+### 7. Revogação de acesso
 
-Após a remoção da permissão de acesso ao Financeiro e a atualização da sessão da usuária, o compartilhamento passou a retornar **acesso negado**.
+Após a remoção da usuária Cecília do grupo `GG_Financeiro` e a atualização da sessão, o compartilhamento passou a retornar **acesso negado**.
 
 ![Acesso negado após revogação](evidencias/07_Acesso_Negado_Apos_Revogacao.png)
 
-# 🔐 Gestão de contas e credenciais
+## 🔐 Gestão de contas e credenciais
 
-## 8. Redefinição de senha
+### 8. Redefinição de senha
 
 Foi realizada a redefinição da senha da usuária pelo Active Directory, utilizando uma credencial temporária sem exposição da senha na documentação.
 
 ![Redefinição de senha](evidencias/08_Redefinicao_Senha_Cecilia.png)
 
-## 9. Troca obrigatória no primeiro logon
+### 9. Troca obrigatória no primeiro logon
 
 Após a redefinição, o Windows exigiu que a usuária definisse uma nova senha antes de concluir o acesso.
 
 ![Troca de senha no primeiro logon](evidencias/09_Troca_Senha_Primeiro_Logon.png)
 
-## 10. Política de bloqueio de conta
+### 10. Política de bloqueio de conta
 
 Para possibilitar a simulação do laboratório, foi configurada uma política de bloqueio após três tentativas inválidas de autenticação, com duração e redefinição do contador em 30 minutos.
 
@@ -107,53 +107,53 @@ Para possibilitar a simulação do laboratório, foi configurada uma política d
 
 ![Política de bloqueio](evidencias/10_Politica_Bloqueio_Conta.png)
 
-## 11. Validação do bloqueio de conta
+### 11. Validação do bloqueio de conta
 
 Após tentativas consecutivas com senha incorreta, a conta da usuária foi bloqueada conforme a política aplicada.
 
 ![Conta bloqueada](evidencias/11_Conta_Bloqueada_Cecilia.png)
 
-## 12. Desbloqueio de conta no AD
+### 12. Desbloqueio de conta no AD
 
 A conta bloqueada foi identificada nas propriedades do usuário e desbloqueada através do Active Directory Users and Computers.
 
 ![Desbloqueio de conta](evidencias/12_Desbloqueio_Conta_Cecilia.png)
 
-## 13. Conta desabilitada
+### 13. Conta desabilitada
 
 Também foi validado o comportamento de uma conta desabilitada no Active Directory. A tentativa de autenticação na estação foi corretamente negada.
 
 ![Conta desabilitada](evidencias/13_Conta_Desabilitada_Login_Negado.png)
 
-# 👤 Onboarding de novo colaborador
+## 👤 Onboarding de novo colaborador
 
-## 14. Criação do usuário
+### 14. Criação do usuário
 
 Foi simulada a admissão de Rafael Martins no setor Financeiro, com criação da conta dentro da OU correspondente.
 
 ![Criação do Rafael](evidencias/14_Onboarding_Rafael_Criacao.png)
 
-## 15. Concessão de acesso por grupo
+### 15. Concessão de acesso por grupo
 
 Rafael Martins foi adicionado ao grupo `GG_Financeiro`, recebendo as permissões vinculadas ao grupo em vez de permissões concedidas diretamente à conta.
 
 ![Rafael no grupo Financeiro](evidencias/15_Onboarding_Rafael_Grupo.png)
 
-## 16. Validação do onboarding
+### 16. Validação do onboarding
 
 Após o primeiro acesso, o novo usuário conseguiu utilizar o compartilhamento e criar o arquivo `Teste_Rafael`, confirmando que as permissões foram aplicadas corretamente.
 
 ![Validação do onboarding](evidencias/16_Onboarding_Rafael_Validacao.png)
 
-# 🛡️ Princípio do menor privilégio
+## 🛡️ Princípio do menor privilégio
 
-## 17. Acesso negado para usuário não autorizado
+### 17. Acesso negado para usuário não autorizado
 
 Foi realizado um teste com uma conta sem associação ao `GG_Financeiro`. Ao tentar acessar o compartilhamento do setor, o Windows retornou acesso negado, validando que somente usuários autorizados possuem acesso ao recurso.
 
 ![Menor privilégio](evidencias/17_Menor_Privilegio_Acesso_Negado.png)
 
-# 💡 Competências praticadas
+## 💡 Competências praticadas
 
 - Active Directory Domain Services (AD DS)
 - Active Directory Users and Computers (ADUC)
